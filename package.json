@@ -1,0 +1,10 @@
+{
+  "name": "localpulse-desktop",
+  "version": "1.0.0",
+  "description": "Localpulse Administration Console for Windows",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "author": "Ethan Lee",
+  "license": "MIT"
+}
