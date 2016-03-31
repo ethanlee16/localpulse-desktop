@@ -270,7 +270,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
   $scope.doRefresh = function() {
     console.log("Refreshed");
     // TODO change 1.3
-    $http.get('http://localpulse.org/api/1.2/getAllJSON?lat=' + POSITION.coords.latitude + '&lon=' + POSITION.coords.longitude).success(function (entries) {
+    $http.get('http://localpulse.org/api/1.3/getAllJSON?lat=' + POSITION.coords.latitude + '&lon=' + POSITION.coords.longitude).success(function (entries) {
 
       $scope.entries = entries;
       console.log(entries)
