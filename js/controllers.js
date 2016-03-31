@@ -1,10 +1,18 @@
 /* global angular */
+
+// HACK
+var POSITION;
+
 angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
 .controller('DashCtrl', function($scope) {})
 
 .controller('ListViewCtrl', function($scope, $ionicPlatform, $ionicModal, 
   $cordovaGeolocation, $cordovaCamera, $cordovaFileTransfer, $ionicPopup, $http) {
+
+  $scope.newComment = {
+    data: '',
+  };
 
   $scope.selectEntry = function(entry) {
     console.log(entry);
@@ -19,6 +27,32 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
       .error(function() {
         console.log("Error fetching comments, or there were no comments");
       });
+  }
+
+  $scope.postComment = function() {
+    console.log($scope.newComment);
+    if($scope.newComment.data.trim().length === 0) {
+      $ionicPopup.alert({
+          template: 'You need to enter a comment to post!',
+          title: 'Comment content needed'
+        });
+    } else {
+      var payload = JSON.stringify({
+          data: $scope.newComment.data.trim(),
+          uuid: "anonymous"
+      });
+      $http.post("http://localpulse.org/api/1.0/comment/" + $scope.currentEntry.objectId, payload)
+        .success(function(response) {
+          $ionicPopup.alert({
+            template: 'Your comment was posted!',
+            title: 'Success'
+          });
+          $scope.currentEntry.comments.push({data: $scope.newComment.data, createdAt: Date.now()});
+          $scope.newComment.data = "";
+        }).error(function() {
+          alert("Error sending your comment. Try again.");
+        });
+    }
   }
 
    /** BEGIN MAPS **/
@@ -235,7 +269,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
   $scope.doRefresh = function() {
     console.log("Refreshed");
-    $http.get('http://localpulse.org/api/1.0/getAllJSON').success(function (entries) {
+    // TODO change 1.3
+    $http.get('http://localpulse.org/api/1.2/getAllJSON?lat=' + POSITION.coords.latitude + '&lon=' + POSITION.coords.longitude).success(function (entries) {
 
       $scope.entries = entries;
       console.log(entries)
@@ -244,7 +279,6 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
       $ionicPlatform.ready(function() {
         
         angular.forEach(entries, function(value, key) {
-          // value.pictures[0]
           var x = value.location.longitude;
           var y = value.location.latitude;
           
@@ -275,8 +309,23 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
     });
   };
 
-  $scope.doRefresh();
+  function geolocationError(err) {
+    alert('Unable to get location. Please allow location finding for this app.');
+    console.error(err);
+  };
 
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function success(pos) {
+      POSITION = pos;
+      $scope.doRefresh();
+    }, geolocationError, {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    });
+  } else {
+    error(new Error('Location not available on your browser.'))
+  }
 })
 
 .controller('ListDetailCtrl', function($scope, $stateParams, $ionicPlatform, $http, $ionicPopup) {

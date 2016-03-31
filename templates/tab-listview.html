@@ -1,16 +1,11 @@
 <ion-view view-title="Localpulse - Southern California Administration">
 
 
- <ion-nav-buttons side="right">
-    <button class="button" ng-click="addPost()">
-      Post
-    </button>
-  </ion-nav-buttons>
-  <div style="margin-left: 30%; width: 70%; height: 50%" ng-if="!didSelect">
+  <div style="margin-left: 30%; width: 70%; height: 50%; overflow-y: auto;" ng-if="!didSelect">
     <h3 style="margin-top: 20%; text-align: center; color: gray; font-weight: 300">No problem report selected</h3>
   </div>
-  <div style="margin-left: 30%; width: 70%; height: 50%" ng-if="didSelect">
-        <div class="item problem-entry" style="height: 350px" ng-style="{'background': 'linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) ), url(&quot;http://localpulse.org/' + currentEntry.pictures[0] + '&quot;)'}">
+  <div style="margin-left: 30%; width: 70%; height: 50%; overflow-y: auto; overflow-x: hidden" ng-if="didSelect">
+        <div class="item problem-entry" style="height: 350px" ng-style="{'background': 'linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) ), url(&quot;http://localpulse.org/' + currentEntry.picture + '&quot;)'}">
             <h2 style="color: white; font-weight: 300; font-size: 24pt; text-align: center; margin-top: 120px; word-wrap: break-word">{{currentEntry.description}}</h2>
             <p style="color: white; font-size: 14pt; text-align: center; font-weight: 300">{{currentEntry.createdAt | date}}</p> 
             <p style="color: white; font-size: 16pt; text-align: center">{{currentEntry.geolocation}}</p> 
@@ -23,16 +18,14 @@
                 <p class="subdued" am-time-ago="comment.createdAt"></p>
             </div>
         </div>
-        <!--
-        <div class="item item-input-inset" style="">
-        <label class="item-input">
-            <input type="text" placeholder="Add Comment" ng-model="comment.data">
-        </label>
-        <button class="button button-clear button-positive" ng-click="postComment()" style="position: absolute; right: 5px; margin-top: -5px">
-             Post
-        </button>
+        <div class="item">
+            <label class="item-input" style="display: inline-block; width: calc(100% - 50px);">
+                <input type="text" placeholder="Add Comment" ng-model="newComment.data">
+            </label>
+            <button class="button button-clear button-positive" ng-click="postComment()" style="position: absolute; right: 5px; margin-top: -5px">
+                Post
+            </button>
         </div>
-        -->
   </div>
   <div id="map"></div>
     <ion-content class="problem-list">
@@ -41,7 +34,7 @@
     on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list">
-         <div ng-repeat="entry in entries" class="item problem-entry" ng-style="{'background': 'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(&quot;http://localpulse.org/' + entry.pictures[0] + '&quot;)'}">
+         <div ng-repeat="entry in entries" class="item problem-entry" ng-style="{'background': 'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(&quot;http://localpulse.org/' + entry.picture + '&quot;)'}">
             <div class="wrapper">
                   <div class="votingButtons" style="width: 50px;height: 50px; z-index: 999; margin: 0 0 0 0; float: left; color: white">
                       <!--<a ng-click="upvoteToggle($index)" style="display: block"><img src="img/upvote.png" ng-if="!didUpvote[$index]" width="15"><img src="img/upvote-fill.png" ng-if="didUpvote[$index]" width="15"></a>-->

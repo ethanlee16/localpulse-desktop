@@ -49,16 +49,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
-  
-  .state('tab.listdetail', {
-    url: '/listview/:entry',
-    views: {
-      'tab-listview': {
-        templateUrl: 'templates/tab-listdetail.html',
-        controller: 'ListDetailCtrl'
-      }
-    }
-  })
 
   .state('tab.maps', {
       url: '/maps',

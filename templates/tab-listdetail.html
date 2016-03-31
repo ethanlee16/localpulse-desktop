@@ -13,7 +13,7 @@
         <p style="color: gray; font-size: 14pt; text-align: center; margin-top: 60px" ng-if="comments.length === 0">No comments here</p>
         <div class="list card" ng-if="comments.length > 0" ng-repeat="comment in comments" style="margin-top: 20px">
             <div class="item item-body">
-                <p>{{comment.data}}</p>
+                <p>{{newComment}}</p>
                 <p class="subdued" am-time-ago="comment.createdAt"></p>
             </div>
         </div>
