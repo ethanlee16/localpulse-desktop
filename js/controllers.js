@@ -1,7 +1,7 @@
 /* global angular */
 
 // HACK
-var POSITION;
+var POSITION, curPosition;
 
 angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
@@ -10,8 +10,48 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 .controller('ListViewCtrl', function($scope, $ionicPlatform, $ionicModal, 
   $cordovaGeolocation, $cordovaCamera, $cordovaFileTransfer, $ionicPopup, $http) {
 
+  $scope.place = {
+    slug: 'current',
+    text: 'Bay Area',
+  };
+
+  $scope.places = [
+    {
+      slug: 'cabayarea',
+      text: 'Bay Area',
+      coords: {
+        latitude: 37.699530,
+        longitude: -122.226244,
+      },
+    },
+    {
+      slug: 'casocal',
+      text: 'Southern California',
+      coords: {
+        latitude: 33.912557,
+        longitude: -118.010689,
+      },
+    },
+  ];
+  $scope.placesSlugLookup = {
+    cabayarea: 0,
+    casocal: 1,
+  };
+
   $scope.newComment = {
     data: '',
+  };
+
+  $scope.selectAdmin = function (place) {
+    console.log(place);
+    if (place.slug == 'current') {
+      curPosition = POSITION;
+      $scope.place.text = 'Bay Area';
+    } else {
+      curPosition = $scope.places[$scope.placesSlugLookup[place.slug]];
+      $scope.place.text = $scope.places[$scope.placesSlugLookup[place.slug]].text;
+    }
+    $scope.doRefresh();
   };
 
   $scope.selectEntry = function(entry) {
@@ -270,7 +310,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
   $scope.doRefresh = function() {
     console.log("Refreshed");
     // TODO change 1.3
-    $http.get('http://localpulse.org/api/1.3/getAllJSON?lat=' + POSITION.coords.latitude + '&lon=' + POSITION.coords.longitude).success(function (entries) {
+    $http.get('http://localpulse.org/api/1.3/getAllJSON?lat=' + curPosition.coords.latitude + '&lon=' + curPosition.coords.longitude).success(function (entries) {
 
       $scope.entries = entries;
       console.log(entries)
@@ -316,7 +356,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function success(pos) {
-      POSITION = pos;
+      curPosition = pos;
       $scope.doRefresh();
     }, geolocationError, {
       enableHighAccuracy: true,

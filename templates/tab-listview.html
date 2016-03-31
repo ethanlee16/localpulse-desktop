@@ -1,5 +1,9 @@
-<ion-view view-title="Localpulse - Southern California Administration">
+<ion-view view-title="Localpulse – {{place.text}} Administration">
 
+  <select style="position: absolute; left: 5px; bottom: 5px; z-index: 99999999" ng-model="place.slug" ng-change="selectAdmin(place)">
+    <option value="current" selected>Current location</option>
+    <option value="{{place.slug}}" ng-repeat="place in places">{{place.text}}</option>
+  </select>
 
   <div style="margin-left: 30%; width: 70%; height: 50%; overflow-y: auto;" ng-if="!didSelect">
     <h3 style="margin-top: 20%; text-align: center; color: gray; font-weight: 300">No problem report selected</h3>
